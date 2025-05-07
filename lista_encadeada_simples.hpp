@@ -112,7 +112,7 @@ public:
     void busca(int valor, No **noAtual, int &count)
     {
         *noAtual = cabeca->prox;
-        count = 1;
+        count = 0;
         if (*noAtual != nullptr)
         {
             for (int posAtual = 0; posAtual < tamanhoLista; posAtual++)
@@ -122,7 +122,6 @@ public:
                     return;
                 else
                     *noAtual = (*noAtual)->prox;
-                count++;
             }
         }
         *noAtual = nullptr;
@@ -136,13 +135,14 @@ public:
         count = 2;
         for (int posAtual = 1; posAtual < tamanhoLista; posAtual++)
         {
+            count++;
             noAtual = noAtual->prox;
             if (noAtual->valor < menor)
             {
                 menor = noAtual->valor;
                 *noMenor = noAtual;
+                count = count + 2;
             }
-            count = count + 3;
         }
     }
 

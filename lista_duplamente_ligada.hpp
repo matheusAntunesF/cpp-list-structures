@@ -1,4 +1,4 @@
-#pragma once;
+#pragma once
 #include <iostream>
 #include <random>
 using namespace std;
@@ -152,13 +152,14 @@ public:
         count = 2;
         for (int posAtual = 1; posAtual < tamanhoLista; posAtual++)
         {
+            count++;
             noAtual = noAtual->prox;
             if (noAtual->valor < menor)
             {
                 menor = noAtual->valor;
                 *noMenor = noAtual;
+                count = count + 2;
             }
-            count = count + 3;
         }
     }
 

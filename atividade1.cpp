@@ -8,6 +8,7 @@ int main()
 {
     ListaEncadeadaSimples LES;
     ListaDuplamenteLigada LDL;
+    ListaContiguidadeFisica LCF;
     int option;
     int tipoLista;
     while (tipoLista != 4)
@@ -17,16 +18,17 @@ int main()
              << "2: Lista simplesmente encadeada;\n"
              << "3: Lista duplamente encadeada;\n"
              << "4: Sair;\n\n"
-             << "5: Escolha a opcao: ";
+             << "Escolha a opcao: ";
         cin >> tipoLista;
-        cout << "\n+--------------------------------------------+\n";
+        cout << "+--------------------------------------------+\n";
         if (tipoLista == 4)
         {
-            cout << "+--------------------------------------------+\n"
-                 << "Saindo...\n"
-                 << "+--------------------------------------------+\n";
-            return;
+            cout
+                << "Saindo...\n"
+                << "+--------------------------------------------+\n";
+            return 0;
         }
+        option = 0;
         while (option != 9)
         {
             cout << "+--------------------------------------------+\n"
@@ -41,7 +43,7 @@ int main()
                  << "9: sair;\n\n"
                  << "Escolha a opcao: ";
             cin >> option;
-            cout << "\n+--------------------------------------------+\n";
+            cout << "+--------------------------------------------+\n";
 
             switch (option)
             {
@@ -49,6 +51,7 @@ int main()
                 switch (tipoLista)
                 {
                 case 1:
+                    LCF.leitura();
                     break;
                 case 2:
                     LES.leitura();
@@ -70,6 +73,7 @@ int main()
                 switch (tipoLista)
                 {
                 case 1:
+                    LCF.geraListaAleatoria(tamanhoLista, inicio, fim);
                     break;
                 case 2:
                     LES.geraListaAleatoria(tamanhoLista, inicio, fim);
@@ -90,6 +94,7 @@ int main()
                 switch (tipoLista)
                 {
                 case 1:
+                    LCF.inserirPosicao(valorInserir, posicao);
                     break;
                 case 2:
                     LES.inserePosicao(valorInserir, posicao);
@@ -110,6 +115,7 @@ int main()
                 switch (tipoLista)
                 {
                 case 1:
+                    LCF.transposicao(primPos, segPos);
                     break;
                 case 2:
                     LES.transposicao(primPos, segPos);
@@ -128,44 +134,107 @@ int main()
                 switch (tipoLista)
                 {
                 case 1:
+                    int posicao;
+                    LCF.busca(valorBuscar, posicao, quantAcessosBusca);
+                    if (posicao == -1)
+                        cout << "Nao encontrado!\n";
+                    else
+                    {
+                        cout << "O valor " << valorBuscar << " (" << LCF.lista[posicao] << ") foi encontrado!";
+                        cout << "\nQuantidade de acessos necessarios: " << quantAcessosBusca << endl;
+                    }
                     break;
                 case 2:
                     No *noBusca;
                     LES.busca(valorBuscar, &noBusca, quantAcessosBusca);
+                    if (noBusca == nullptr)
+                        cout << "Nao encontrado!\n";
+                    else
+                    {
+                        cout << "O valor " << valorBuscar << " (" << noBusca->valor << ") foi encontrado!";
+                        cout << "\nQuantidade de acessos necessarios: " << quantAcessosBusca << endl;
+                    }
                     break;
                 case 3:
-                    No2 *noBusca;
-                    LDL.busca(valorBuscar, &noBusca, quantAcessosBusca);
+                    No2 *noBusca1;
+                    LDL.busca(valorBuscar, &noBusca1, quantAcessosBusca);
+                    if (noBusca1 == nullptr)
+                        cout << "Nao encontrado!\n";
+                    else
+                    {
+                        cout << "O valor " << valorBuscar << " (" << noBusca1->valor << ") foi encontrado!";
+                        cout << "\nQuantidade de acessos necessarios: " << quantAcessosBusca << endl;
+                    }
                     break;
                 default:
                     break;
                 }
-                if (noBusca == nullptr)
-                    cout << "Nao encontrado!";
-                else
-                    cout << "O valor " << valorBuscar << " (" << noBusca->valor << ") foi encontrado!";
-                cout << "\nQuantidade de acessos necessarios: " << quantAcessosBusca << endl;
                 break;
             case 6:
                 int menor, quantAcessosMenor;
-                No *noMenor;
-                LES.buscaMenor(menor, &noMenor, quantAcessosMenor);
-                cout << "O menor valor e: " << menor << " (" << noMenor->valor << ")";
-                cout << "\nQuantidade de acessos necessarios: " << quantAcessosMenor << endl;
+                switch (tipoLista)
+                {
+                case 1:
+                    int posicao;
+                    LCF.buscaMenor(menor, posicao, quantAcessosMenor);
+                    cout << "O menor valor e: " << menor << " (" << LCF.lista[posicao] << ")";
+                    cout << "\nQuantidade de acessos necessarios: " << quantAcessosMenor << endl;
+                    break;
+                case 2:
+                    No *noMenor;
+                    LES.buscaMenor(menor, &noMenor, quantAcessosMenor);
+                    cout << "O menor valor e: " << menor << " (" << noMenor->valor << ")";
+                    cout << "\nQuantidade de acessos necessarios: " << quantAcessosMenor << endl;
+                    break;
+                case 3:
+                    No2 *noMenor1;
+                    LDL.buscaMenor(menor, &noMenor1, quantAcessosMenor);
+                    cout << "O menor valor e: " << menor << " (" << noMenor1->valor << ")";
+                    cout << "\nQuantidade de acessos necessarios: " << quantAcessosMenor << endl;
+                    break;
+                default:
+                    break;
+                }
                 break;
             case 7:
-                LES.mostrar();
+                switch (tipoLista)
+                {
+                case 1:
+                    LCF.mostrar();
+                    break;
+                case 2:
+                    LES.mostrar();
+                    break;
+                case 3:
+                    LDL.mostrar();
+                    break;
+                default:
+                    break;
+                }
                 break;
             case 8:
-                LES.mostrarInvertida();
+                switch (tipoLista)
+                {
+                case 1:
+                    LCF.mostrarInvertida();
+                    break;
+                case 2:
+                    LES.mostrarInvertida();
+                    break;
+                case 3:
+                    LDL.mostrarInvertida();
+                default:
+                    break;
+                }
                 break;
             default:
-                cout << "+--------------------------------------------+\n"
-                     << "Saindo...\n"
-                     << "+--------------------------------------------+\n";
+                cout
+                    << "Saindo...\n"
+                    << "+--------------------------------------------+\n";
                 option = 9;
                 break;
             }
         }
     }
+    return 0;
 }
