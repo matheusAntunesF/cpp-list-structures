@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <random>
+#include "settings.cpp"
 using namespace std;
 
 class No2
@@ -79,22 +80,18 @@ public:
         }
     }
 
-    void inserePosicao(int valor, int posicao)
+    void inserePosicao(int valor, No2* noAntecessor)
     {
-        if (posicao < 0)
+        if (noAntecessor == nullptr){
+            cout << "Posicao inexistente" << endl;
             return;
-        No2 *noAntecessor = cabeca;
-        for (int posAtual = 0; (posAtual < posicao) && (noAntecessor->prox != nullptr); posAtual++)
-        {
-            noAntecessor = noAntecessor->prox;
         }
-        No2 *novoNo = new No2(valor, noAntecessor, nullptr);
+        No2 *novoNo = new No2(valor, noAntecessor, noAntecessor->prox);
         No2 *noProx = noAntecessor->prox;
 
         noAntecessor->prox = novoNo;
         if (noProx != nullptr)
         {
-            novoNo->prox = noProx;
             noProx->ant = novoNo;
         }
         tamanhoLista++;
@@ -125,42 +122,53 @@ public:
         segNo->valor = cache;
     }
 
-    void busca(int valor, No2 **noAtual, int &count)
+    No2 *buscaPtr(int posicao)
     {
-        *noAtual = cabeca->prox;
-        count = 1;
-        if (*noAtual != nullptr)
+        No2 *noAntecessor = cabeca;
+        for(int posAtual = 0; (noAntecessor->prox != nullptr) && posAtual < posicao; posAtual++)
+        {
+            noAntecessor = noAntecessor->prox;
+        }
+        return noAntecessor;
+    }
+
+    No2 *busca(int valor)
+    {
+        No2 *noAtual = cabeca->prox;
+        quantAcessosBusca = 0;
+        if (noAtual != nullptr)
         {
             for (int posAtual = 0; posAtual < tamanhoLista; posAtual++)
             {
-                count++;
-                if ((*noAtual)->valor == valor)
-                    return;
+                quantAcessosBusca++;
+                if (noAtual->valor == valor)
+                    return noAtual;
                 else
-                    *noAtual = (*noAtual)->prox;
-                count++;
+                    noAtual = noAtual->prox;
+                quantAcessosBusca++;
             }
         }
-        *noAtual = nullptr;
+        noAtual = nullptr;
+        return noAtual;
     }
 
-    void buscaMenor(int &menor, No2 **noMenor, int &count)
+    No2* buscaMenor()
     {
         No2 *noAtual = cabeca->prox;
-        *noMenor = noAtual;
-        menor = noAtual->valor;
-        count = 2;
-        for (int posAtual = 1; posAtual < tamanhoLista; posAtual++)
+        No2 *noAntMenor = noAtual;
+        quantAcessosMenor = 0;
+        while(noAtual->prox != nullptr)
         {
-            count++;
-            noAtual = noAtual->prox;
-            if (noAtual->valor < menor)
+            quantAcessosMenor++;
+            if (noAtual->prox->valor < noAntMenor->prox->valor)
             {
-                menor = noAtual->valor;
-                *noMenor = noAtual;
-                count = count + 2;
+                noAntMenor = noAtual;
+                quantAcessosMenor++;
             }
+            noAtual = noAtual->prox;
+            quantAcessosMenor++;
         }
+        return noAntMenor;
     }
 
     void mostrar()
@@ -190,5 +198,15 @@ public:
             return;
         mostrarInvertidaRecursiva(noAtual->prox);
         cout << noAtual->valor << "; ";
+    }
+
+    void libera(){
+        No2* noAtual = cabeca;
+        No2* noAnterior = cabeca;
+        while(noAtual != nullptr){
+            noAnterior = noAtual;
+            noAtual = noAtual->prox;
+            delete noAnterior;
+        }
     }
 };

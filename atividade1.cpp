@@ -2,15 +2,16 @@
 #include "lista_fisica.hpp"
 #include "lista_encadeada_simples.hpp"
 #include "lista_duplamente_ligada.hpp"
+#include "settings.cpp"
 using namespace std;
 
 int main()
 {
+    int option;
+    int tipoLista = 0;
     ListaEncadeadaSimples LES;
     ListaDuplamenteLigada LDL;
     ListaContiguidadeFisica LCF;
-    int option;
-    int tipoLista;
     while (tipoLista != 4)
     {
         cout << "+--------------------------------------------+\n"
@@ -26,6 +27,8 @@ int main()
             cout
                 << "Saindo...\n"
                 << "+--------------------------------------------+\n";
+            LES.libera();
+            LDL.libera();
             return 0;
         }
         option = 0;
@@ -94,13 +97,17 @@ int main()
                 switch (tipoLista)
                 {
                 case 1:
-                    LCF.inserirPosicao(valorInserir, posicao);
+                    LCF.inserePosicao(valorInserir, posicao);
                     break;
                 case 2:
-                    LES.inserePosicao(valorInserir, posicao);
+                    No *noAnterior;
+                    noAnterior = LES.buscaPtr(posicao);
+                    LES.inserePosicao(valorInserir, noAnterior);
                     break;
                 case 3:
-                    LDL.inserePosicao(valorInserir, posicao);
+                    No2 *noAnterior1;
+                    noAnterior1 = LDL.buscaPtr(posicao);
+                    LDL.inserePosicao(valorInserir, noAnterior1);
                     break;
                 default:
                     break;
@@ -128,41 +135,45 @@ int main()
                 }
                 break;
             case 5:
-                int valorBuscar, quantAcessosBusca;
+                int valorBuscar;
                 cout << "Insira o valor a ser buscado: ";
                 cin >> valorBuscar;
                 switch (tipoLista)
                 {
                 case 1:
                     int posicao;
-                    LCF.busca(valorBuscar, posicao, quantAcessosBusca);
-                    if (posicao == -1)
+                    posicao = LCF.busca(valorBuscar);
+                    if (posicao == -1){
                         cout << "Nao encontrado!\n";
+                        cout << "Quantidade de acessos necessarios: " << quantAcessosBusca << endl;
+                    }
                     else
                     {
-                        cout << "O valor " << valorBuscar << " (" << LCF.lista[posicao] << ") foi encontrado!";
+                        cout << "O valor " << valorBuscar << " foi encontrado!";
                         cout << "\nQuantidade de acessos necessarios: " << quantAcessosBusca << endl;
                     }
                     break;
                 case 2:
                     No *noBusca;
-                    LES.busca(valorBuscar, &noBusca, quantAcessosBusca);
-                    if (noBusca == nullptr)
+                    noBusca = LES.busca(valorBuscar);
+                    if (noBusca == nullptr){
                         cout << "Nao encontrado!\n";
+                        cout << "\nQuantidade de acessos necessarios: " << quantAcessosBusca << endl;
+                    }
                     else
                     {
-                        cout << "O valor " << valorBuscar << " (" << noBusca->valor << ") foi encontrado!";
+                        cout << "O valor " << valorBuscar << " foi encontrado!";
                         cout << "\nQuantidade de acessos necessarios: " << quantAcessosBusca << endl;
                     }
                     break;
                 case 3:
                     No2 *noBusca1;
-                    LDL.busca(valorBuscar, &noBusca1, quantAcessosBusca);
+                    noBusca1 = LDL.busca(valorBuscar);
                     if (noBusca1 == nullptr)
                         cout << "Nao encontrado!\n";
                     else
                     {
-                        cout << "O valor " << valorBuscar << " (" << noBusca1->valor << ") foi encontrado!";
+                        cout << "O valor " << valorBuscar << " foi encontrado!";
                         cout << "\nQuantidade de acessos necessarios: " << quantAcessosBusca << endl;
                     }
                     break;
@@ -171,26 +182,28 @@ int main()
                 }
                 break;
             case 6:
-                int menor, quantAcessosMenor;
                 switch (tipoLista)
                 {
                 case 1:
-                    int posicao;
-                    LCF.buscaMenor(menor, posicao, quantAcessosMenor);
-                    cout << "O menor valor e: " << menor << " (" << LCF.lista[posicao] << ")";
-                    cout << "\nQuantidade de acessos necessarios: " << quantAcessosMenor << endl;
+                    int posicao, menor;
+                    posicao = LCF.buscaMenor();
+                    menor = LCF.lista[posicao];
+                    cout << "O menor valor e: " << menor << ";\n";
+                    cout << "Quantidade de acessos necessarios: " << quantAcessosMenor << endl;
                     break;
                 case 2:
-                    No *noMenor;
-                    LES.buscaMenor(menor, &noMenor, quantAcessosMenor);
-                    cout << "O menor valor e: " << menor << " (" << noMenor->valor << ")";
-                    cout << "\nQuantidade de acessos necessarios: " << quantAcessosMenor << endl;
+                    No *noAntMenor;
+                    noAntMenor = LES.buscaMenor();
+                    cout << "O menor valor e: " << noAntMenor->prox->valor << ";\n";
+                    cout << "O valor antecessor ao menor valor e: " << noAntMenor->valor << ";\n";
+                    cout << "Quantidade de acessos necessarios: " << quantAcessosMenor << endl;
                     break;
                 case 3:
-                    No2 *noMenor1;
-                    LDL.buscaMenor(menor, &noMenor1, quantAcessosMenor);
-                    cout << "O menor valor e: " << menor << " (" << noMenor1->valor << ")";
-                    cout << "\nQuantidade de acessos necessarios: " << quantAcessosMenor << endl;
+                    No2 *noAntMenor1;
+                    noAntMenor1 = LDL.buscaMenor();
+                    cout << "O menor valor e: " << noAntMenor1->prox->valor << ";\n";
+                    cout << "O valor antecessor ao menor valor e: " << noAntMenor1->valor << ";\n";
+                    cout << "Quantidade de acessos necessarios: " << quantAcessosMenor << endl;
                     break;
                 default:
                     break;
@@ -231,7 +244,6 @@ int main()
                 cout
                     << "Saindo...\n"
                     << "+--------------------------------------------+\n";
-                option = 9;
                 break;
             }
         }

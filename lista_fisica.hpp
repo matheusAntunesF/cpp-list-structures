@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <random>
+#include "settings.cpp"
 using namespace std;
 class ListaContiguidadeFisica
 {
@@ -39,7 +40,7 @@ public:
         }
     }
 
-    void inserirPosicao(int valor, int posicao)
+    void inserePosicao(int valor, int posicao)
     {
         lista.insert(lista.begin() + posicao, valor);
     }
@@ -51,36 +52,38 @@ public:
         lista[segPos] = cache;
     }
 
-    void busca(int valor, int &posicao, int &quant)
+    int busca(int valor)
     {
-        quant = 0;
+        int posicao;
+        quantAcessosBusca = 0;
         for (posicao = 0; posicao < static_cast<int>(lista.size()); posicao++)
         {
-            quant = quant + 2;
+            quantAcessosBusca = quantAcessosBusca + 2;
             if (lista[posicao] == valor)
             {
-                return;
+                return posicao;
             }
         }
         posicao = -1;
-        return;
+        return posicao;
     }
 
-    void buscaMenor(int &menor, int &posicaoMenor, int &quant)
+    int buscaMenor()
     {
-        menor = lista[0];
-        posicaoMenor = 0;
-        quant = 1;
+        int menor = lista[0];
+        int posicaoMenor = 0;
+        quantAcessosMenor = 0;
         for (int posicao = 0; posicao < static_cast<int>(lista.size()); posicao++)
         {
-            quant = quant + 2;
+            quantAcessosMenor = quantAcessosMenor + 2;
             if (lista[posicao] < menor)
             {
                 menor = lista[posicao];
                 posicaoMenor = posicao;
-                quant++;
+                quantAcessosMenor++;
             }
         }
+        return posicaoMenor;
     }
 
     void mostrar()
@@ -98,4 +101,5 @@ public:
         }
         cout << endl;
     }
+
 };
